@@ -1,8 +1,8 @@
 from models.base import Base
 # import data type using SQLAlchenmy
-from sqlalchemy import Integer,String,Text,DateTime,func
+from sqlalchemy import Integer,String,Text,DateTime
 from sqlalchemy.orm import mapped_column
-
+from sqlalchemy.sql import func
 
 # create models for product DB schema 
 # reffer to base models

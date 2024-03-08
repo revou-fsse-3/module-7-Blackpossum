@@ -21,7 +21,7 @@ def Running_server():
     Session = sessionmaker(connection)
     with Session() as s:
         # execute sql statement 
-        s.execute(text(" INSERT INTO product (name,price,description) VALUES ('blood orchid', 250000, 'from borneo rain forrest')"))
+        s.execute(text(" INSERT INTO product (name, price, description, created_at) VALUES ('blood orchid', 250000, 'from borneo rain forrest', '2024-02-07 10:00:00')"))
         s.commit()
 
 
