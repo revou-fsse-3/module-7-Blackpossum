@@ -7,7 +7,7 @@ from sqlalchemy.sql import func
 # create models for product DB schema 
 # reffer to base models
 
-class product(Base):
+class Product(Base):
     __tablename__ = 'product'
 
     id = mapped_column(Integer,primary_key=True, autoincrement=True)

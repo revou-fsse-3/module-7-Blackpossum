@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 import os
 #to use env in DB connector 
 
@@ -11,5 +12,5 @@ ConnectionString = f'mysql+mysqlconnector://{username}:{password}@{host}/{databa
 engine = create_engine(ConnectionString)
 
 connection = engine.connect()
-
+Session =sessionmaker(connection)
 print('succesfuly connect to a database')
