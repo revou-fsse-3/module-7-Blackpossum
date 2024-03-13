@@ -41,7 +41,7 @@ def product_insert():
         description=request.form['description'],
         created_at=func.now()
         )
-    session = Session()
+    session =Session()
     session.begin()
 
     try:
