@@ -59,7 +59,7 @@
         id="searchInput"
         placeholder="Search..."
       />
-      <button class="search-button" onclick="search()">Search</button>
+      <button class="search-button" onclick="searchItems()">Search</button>
     </div>
     <hr style="border: none" />
     <table>
@@ -82,7 +82,9 @@
           <td>
             <button>Review</button>
             <button onclick="openEditProductForm()">Edit</button>
-            <button>Delete</button>
+            <button id="delete_{{ product.id }}" onclick="deleteProduct(this)">
+              Delete
+            </button>
           </td>
         </tr>
         {% endfor %}
@@ -113,7 +115,11 @@
         <button type="button" onclick="closeNewProductForm()">Cancel</button>
       </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
     <script>
       var form_url = "";
       var form_method = "";
@@ -176,6 +182,10 @@
           alert(response.message);
           location.reload();
         });
+      }
+
+      function searchItems() {
+        window.location = base_url + "?query=" + $("#searchInput").val();
       }
     </script>
   </body>
