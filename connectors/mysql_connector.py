@@ -8,9 +8,20 @@ password = os.getenv("DB_PASSWORD")
 host = os.getenv("DB_HOST")
 database_name = os.getenv("DB_NAME")
 
-ConnectionString = f'mysql+mysqlconnector://{username}:{password}@{host}/{database_name}'
-engine = create_engine(ConnectionString)
+print(username)
+print(password)
+print(host)
+print(database_name)
 
-connection = engine.connect()
-Session =sessionmaker(connection)
-print('succesfuly connect to a database')
+
+
+
+try:
+    ConnectionString = f'mysql+mysqlconnector://{username}:{password}@{host}/{database_name}'
+    engine = create_engine(ConnectionString)
+    connection = engine.connect()
+    Session =sessionmaker(connection)
+    print('Successfully connected to the database.')
+
+except Exception as e:
+    print('Failed to connect to the database:', e)

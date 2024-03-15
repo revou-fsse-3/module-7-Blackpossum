@@ -32,7 +32,7 @@ def product_home():
 
     return render_template("products/product_home.html",response_data=response_data)
 
-# added ne product in database
+# added new product in database
 @product_routes.route("/product", methods=['POST'])
 def product_insert():
     new_product = Product(
@@ -47,6 +47,7 @@ def product_insert():
     try:
         session.add(new_product)
         session.commit()
+        print(new_product)
     except Exception as e:
         # operation failed
         session.rollback()

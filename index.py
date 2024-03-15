@@ -9,12 +9,14 @@ from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
 from controllers.product import product_routes
+from controllers.user import user_routes
 
 # call the function 
 load_dotenv()
 
 app = Flask(__name__)
 app.register_blueprint(product_routes)
+app.register_blueprint(user_routes)
 
 
 @app.route("/")
