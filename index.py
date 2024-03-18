@@ -1,7 +1,8 @@
 from flask import Flask 
-from connectors.mysql_connector import connection
+from connectors.mysql_connector import engine
 # import Env
 from dotenv import load_dotenv
+import os
 # import Db Scheme mdoels to use 
 from models.product import Product
 # import session maker from SQLAlchemy 
@@ -11,10 +12,28 @@ from sqlalchemy.orm import sessionmaker
 from controllers.product import product_routes
 from controllers.user import user_routes
 
+from flask_login import LoginManager  # Correct
+from models.user import User
+
+
 # call the function 
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# define user loader for checking user data in database
+@login_manager.user_loader
+def load_user(user_id):
+    connection = engine.connect()
+    Session = sessionmaker(connection)
+    session = Session()
+
+    return session.query(User).get(int(user_id))
+
 app.register_blueprint(product_routes)
 app.register_blueprint(user_routes)
 

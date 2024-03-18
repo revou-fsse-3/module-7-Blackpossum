@@ -1,12 +1,16 @@
 from flask import Blueprint, render_template,request
 from connectors.mysql_connector import Session
 from models.product import Product
-from sqlalchemy import select,func
+from sqlalchemy import select,func,or_
+
+from flask_login import current_user, login_required
+
 
 product_routes = Blueprint('product_routes',__name__)
 
 #  show list of product 
 @product_routes.route("/product", methods=['GET'])
+@login_required
 def product_home():
     response_data =dict()
 
@@ -29,8 +33,9 @@ def product_home():
         print(e)
         return "error"
 
-
+    response_data['name'] = current_user.name
     return render_template("products/product_home.html",response_data=response_data)
+
 
 # added new product in database
 @product_routes.route("/product", methods=['POST'])
@@ -51,6 +56,7 @@ def product_insert():
     except Exception as e:
         # operation failed
         session.rollback()
+        print('Transaction rolled back')
         print(e)
         return {"message" : "failed to created new_product due to error"}
     # operation succes

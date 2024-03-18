@@ -50,6 +50,10 @@
     </style>
   </head>
   <body>
+    <div>
+      Hello {{ response_data['name'] }}
+      <a href="/logout">logout</a>
+    </div>
     <h2>Product List</h2>
     <button onclick="openNewProductForm()">Add New Product</button>
     <div class="search-container">
