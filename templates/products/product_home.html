@@ -85,7 +85,7 @@
           <td>{{ product.description }}</td>
           <td>
             <button>Review</button>
-            <button onclick="openEditProductForm()">Edit</button>
+            <button id="edit_{{ product.id }}" onclick="openEditProductForm(this)">Edit</button>
             <button id="delete_{{ product.id }}" onclick="deleteProduct(this)">
               Delete
             </button>
@@ -161,14 +161,17 @@
       function submitForm() {
         var request_data = {
           name: $("#productName").val(),
-          price: $("#productPrice").val(),
+          price: parseInt($("#productPrice").val()),
           description: $("#productDescription").val(),
         };
 
         $.ajax({
           url: form_url,
-          data: request_data,
+          data: JSON.stringify(request_data),
           method: form_method,
+          headers: {
+            "Content-type":"application/json"
+          },
         }).done(function (response) {
           alert(response.message);
           location.reload();

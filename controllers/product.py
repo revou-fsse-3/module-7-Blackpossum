@@ -1,9 +1,14 @@
-from flask import Blueprint, render_template,request
+from flask import Blueprint, render_template,request,jsonify
 from connectors.mysql_connector import Session
 from models.product import Product
 from sqlalchemy import select,func,or_
 
 from flask_login import current_user, login_required
+from decorators.role_checker import role_required
+
+from validation.product_schema import product_schema
+from cerberus import Validator
+from flask_jwt_extended import jwt_required, get_jwt
 
 
 product_routes = Blueprint('product_routes',__name__)
@@ -39,11 +44,19 @@ def product_home():
 
 # added new product in database
 @product_routes.route("/product", methods=['POST'])
+@role_required('Admin')
 def product_insert():
+
+    v= Validator(product_schema)
+    json_data = request.get_json()
+
+    if not v.validate(json_data):
+        return jsonify({"error": v.errors}),400
+
     new_product = Product(
-        name=request.form['name'],
-        price=request.form['price'],
-        description=request.form['description'],
+        name=json_data['name'],
+        price=json_data['price'],
+        description=json_data['description'],
         created_at=func.now()
         )
     session =Session()
@@ -77,3 +90,20 @@ def product_delete(id):
         return {"message" : "failed to delete product, please check console"}
     
     return {"message" : "product sucessfuly deleted"}
+
+@product_routes.route("/product/<id>", methods=['PUT'])
+@jwt_required
+def product_edit(id):
+    session = Session()
+    session.begin()
+    try:
+        product = session.query(Product).fillter(Product.id == id).first()
+
+        product.name = request.form['name']
+        product.price = request.form['price']
+        product.description = request.form['description']
+    except Exception as e:
+        session.rollback()
+        print(e)
+        return {"message" : "product failed to edit, please check console"}
+    return {"message" : "succes editing data"}

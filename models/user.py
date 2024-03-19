@@ -18,6 +18,7 @@ class User(Base, UserMixin):
     name = mapped_column(String(190),nullable=False)
     password = mapped_column(String(190),nullable=False)
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
+    role = mapped_column(String(100), nullable=True)
 
     def set_password(self, plaintext_password):
         self.password = bcrypt.hashpw(plaintext_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')  # Store the hash as a string

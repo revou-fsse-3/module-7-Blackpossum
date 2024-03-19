@@ -14,6 +14,7 @@ from controllers.user import user_routes
 
 from flask_login import LoginManager  # Correct
 from models.user import User
+from flask_jwt_extended import JWTManager
 
 
 # call the function 
@@ -21,7 +22,13 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY')
 
+# jwt manager 
+jwt= JWTManager(app)
+
+
+# login manager 
 login_manager = LoginManager()
 login_manager.init_app(app)
 

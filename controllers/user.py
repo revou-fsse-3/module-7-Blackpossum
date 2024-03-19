@@ -1,8 +1,9 @@
-from flask import Blueprint,render_template,request,redirect
+from flask import Blueprint,render_template,request,redirect,jsonify
 from connectors.mysql_connector import engine,sessionmaker
 from models.user import User
 from sqlalchemy import select,or_
 from flask_login import login_user, logout_user
+from flask_jwt_extended import create_access_token
 
 user_routes = Blueprint('user_routes',__name__)
 
@@ -71,3 +72,32 @@ def do_user_login():
 def do_user_logout():
     logout_user()
     return redirect('/login')
+
+@user_routes.route("/loginjwt", methods=['POST'])
+def do_user_login_jwt():
+    # establish conncetion session
+    connection = engine.connect()
+    Session = sessionmaker(connection)
+    session = Session()
+    # initialize connection
+    session.begin()
+
+    try:
+        # find / macthing inputed email on database by query 
+        user = session.query(User).filter(User.email==request.form['email']).first()
+
+        # conditinal if email doesnt exist 
+        if user is None:
+            return{"message":"email not match or doesnt exist"}
+        
+        # find / macthing inputed password on darabase by query
+        if not user.check_password(request.form['password']):
+            return {"message":"password not macth or doesnt exist"}
+        # if login success, this function will save user data to session and created session_id to pass to browser and saved in browser cookie
+        # login_user(user, remember=False)
+        acces_token = create_access_token(identity=user.id, additional_claims={"name": user.name, "role": user.role})
+        return jsonify({ "access_token" : acces_token})
+
+    except Exception as e:
+        print(e)
+        return {"message": "Login failure incorect user data"},401
